@@ -49,7 +49,7 @@ Agrega `ds_atomic` como dependencia en tu archivo `pubspec.yaml`:
 dependencies:
   ds_atomic:
     git:
-      url: https://github.com/josueSerna/ds_atomic.git # o la rama/tag que desees
+      url: https://github.com/josueSerna/ds_atomic
 ```
 
 **Ruta local (desarrollo):**

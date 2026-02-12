@@ -696,7 +696,3 @@ void main() {
 ```
 
 ---
-
-## Licencia
-
-Este proyecto está bajo la licencia incluida en el archivo [LICENSE](LICENSE).

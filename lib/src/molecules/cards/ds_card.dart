@@ -1,4 +1,3 @@
-
 import 'package:ds_atomic/ds_atomic.dart';
 import 'package:flutter/material.dart';
 
@@ -17,10 +16,10 @@ class DsCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.black,
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          )
-        ]
+            blurRadius: 2,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: child,
     );

@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 class DsBaseTemplate extends StatelessWidget {
   final String? title;
   final Widget body;
+  final Widget? action;
   final Widget? floatingActionButton;
 
   const DsBaseTemplate({
     super.key,
     this.title,
     required this.body,
+    this.action,
     this.floatingActionButton,
   });
 
@@ -17,15 +19,20 @@ class DsBaseTemplate extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: DsColors.background,
-      appBar: title != null
-        ? AppBar(
-          title: Text(title!),
-          centerTitle: true,
-        )
-        : null,
-      body: Padding(
-        padding: const EdgeInsets.all(DsSpacing.lg),
-        child: body,
+      body: Column(
+        children: [
+          if (title != null)
+            DsAppHeader(
+              title: title!,
+              action: action,
+            ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(DsSpacing.lg),
+              child: body,
+            ),
+          ),
+        ],
       ),
       floatingActionButton: floatingActionButton,
     );

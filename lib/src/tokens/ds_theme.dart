@@ -7,6 +7,13 @@ class DsTheme {
   static ThemeData lightTheme = ThemeData(
     scaffoldBackgroundColor: DsColors.background,
     primaryColor: DsColors.primary,
-    colorScheme: ColorScheme.fromSeed(seedColor: DsColors.primary)
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: DsColors.primary,
+    ),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: DsColors.surface,
+      foregroundColor: DsColors.textPrimary,
+      elevation: 0,
+    ),
   );
 }

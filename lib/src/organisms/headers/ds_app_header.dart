@@ -17,8 +17,8 @@ class DsAppHeader extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: DsSpacing.md,
-        vertical: DsSpacing.md,
+        horizontal: DsSpacing.sm,
+        vertical: DsSpacing.sm,
       ),
       decoration: BoxDecoration(
         color: DsColors.surface,

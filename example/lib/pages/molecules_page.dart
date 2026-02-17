@@ -10,15 +10,9 @@ class MoleculesPage extends StatelessWidget {
       title: 'Molecules',
       body: Column(
         children: [
-          DsLabeledInput(
-            label: 'Email',
-            controller: TextEditingController(),
-            hintText: 'correo@ejemplo.com',
-          ),
-          const SizedBox(height: DsSpacing.lg),
           DsCard(
-            child: DSText('Contenido dentro de una card')
-          )
+            child: Text('Esto es una carta')
+          ),
         ],
       )
     );

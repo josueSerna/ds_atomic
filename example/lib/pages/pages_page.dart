@@ -13,20 +13,12 @@ class PagesPage extends StatelessWidget {
           DsPrimaryButton(
             label: 'Ir a login Page',
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const LoginPage()),
-              );
             },
           ),
           const SizedBox(height: DsSpacing.md),
           DsPrimaryButton(
             label: 'Ir a Dashboard Page',
             onPressed: () {
-              Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (_) => const DashboardPage()),
-              );
             },
           ),
         ],

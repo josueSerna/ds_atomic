@@ -10,13 +10,6 @@ class OrganismsPage extends StatelessWidget {
       title: 'Organisms',
       body: Column(
         children: [
-          DsLoginForm(
-            onSubmit: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Submit presionado'))
-              );
-            },
-          ),
         ],
       ),
     );

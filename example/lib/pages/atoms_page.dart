@@ -23,10 +23,6 @@ class AtomsPage extends StatelessWidget {
             onPressed: (){},
           ),
           const SizedBox(height: DsSpacing.md),
-          DsInput(
-            controller: TextEditingController(),
-            hintText: 'Input Básico',
-          )
         ],
       )
     );

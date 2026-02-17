@@ -21,6 +21,7 @@ Un **Design System** para Flutter basado en la metodología **Atomic Design**. E
 - [Molecules (Moléculas)](#molecules-moléculas)
   - [DsIconButton](#dsiconbutton)
   - [DsCard](#dscard)
+  - [DsProductCard](#dsproductcard)
   - [DsLabeledInput](#dslabeledinput)
 - [Organisms (Organismos)](#organisms-organismos)
   - [DsLoginForm](#dsloginform)
@@ -30,8 +31,9 @@ Un **Design System** para Flutter basado en la metodología **Atomic Design**. E
   - [DsBaseTemplate](#dsbasetemplate)
   - [DsCenteredTemplate](#dscenteredtemplate)
 - [Pages (Páginas)](#pages-páginas)
-  - [LoginPage](#loginpage)
-  - [DashboardPage](#dashboardpage)
+  - [DsCatalogPage](#dscatalogpage)
+  - [DsProductsPage](#dsproductspage)
+  - [DsProductDetailPage](#dsproductdetailpage)
 - [Ejemplo Completo (Showcase App)](#ejemplo-completo-showcase-app)
   - [Requisitos Previos](#requisitos-previos)
   - [Cómo Ejecutar el Ejemplo](#cómo-ejecutar-el-ejemplo)
@@ -93,10 +95,10 @@ Tokens  →  Atoms  →  Molecules  →  Organisms  →  Templates  →  Pages
 |-------------|----------------------------------------------------------------------|-------------------------------------------|
 | **Tokens**   | Variables de diseño base (colores, espaciado, tipografía, radios)    | `DsColors`, `DsSpacing`, `DsTypography`   |
 | **Atoms**    | Componentes UI mínimos e indivisibles                               | `DSText`, `DsPrimaryButton`, `DsInput`     |
-| **Molecules**| Combinaciones de átomos que forman componentes funcionales           | `DsCard`, `DsLabeledInput`, `DsIconButton` |
+| **Molecules**| Combinaciones de átomos que forman componentes funcionales           | `DsCard`, `DsProductCard`, `DsIconButton` |
 | **Organisms**| Grupos de moléculas que forman secciones completas de UI             | `DsLoginForm`, `DsAppHeader`, `DsCardSection` |
 | **Templates**| Layouts y estructuras de página reutilizables                       | `DsBaseTemplate`, `DsCenteredTemplate`     |
-| **Pages**    | Pantallas completas listas para usar                                | `LoginPage`, `DashboardPage`               |
+| **Pages**    | Pantallas completas listas para usar (solo UI, sin lógica de negocio) | `DsCatalogPage`, `DsProductsPage`, `DsProductDetailPage` |
 
 ```
 lib/
@@ -372,6 +374,36 @@ Comportamiento:
 - Fondo `DsColors.surface`, bordes con `DsRadius.md`.
 - Sombra sutil con `BoxShadow`.
 
+### DsProductCard
+
+Tarjeta de producto con imagen, título y precio. Incluye manejo automático de carga de imágenes y errores.
+
+| Propiedad  | Tipo            | Requerido | Descripción                          |
+|------------|-----------------|-----------|--------------------------------------|
+| `imageUrl` | `String`        | Sí        | URL de la imagen del producto        |
+| `title`    | `String`        | Sí        | Nombre del producto                  |
+| `price`    | `String`        | Sí        | Precio formateado del producto       |
+| `onTap`    | `VoidCallback?` | No        | Función al tocar la tarjeta          |
+
+```dart
+DsProductCard(
+  imageUrl: 'https://example.com/product.jpg',
+  title: 'Producto Premium',
+  price: '\$99.99',
+  onTap: () {
+    print('Producto seleccionado');
+  },
+)
+```
+
+Comportamiento:
+- **Manejo de carga**: Muestra `CircularProgressIndicator` mientras carga la imagen
+- **Manejo de errores**: Muestra ícono `broken_image` si la imagen falla
+- Imagen con altura fija de 120px, esquinas redondeadas con `DsRadius.sm`
+- Usa `DsCard` internamente para el contenedor
+- Layout vertical: imagen → título → precio
+- El precio usa `DsTypography.caption` para estilo secundario
+
 ### DsLabeledInput
 
 Input con etiqueta superior. Combina `DSText` (caption) + `DsInput`.
@@ -523,37 +555,136 @@ Comportamiento:
 
 ## Pages (Páginas)
 
-Pantallas completas listas para usar que combinan templates, organisms y otros componentes.
+Pantallas completas listas para usar que combinan templates, organisms y otros componentes. Las páginas del Design System **solo manejan la UI**, reciben datos por parámetros y no contienen lógica de negocio.
 
-### LoginPage
+### DsCatalogPage
 
-Página de inicio de sesión que usa `DsBaseTemplate` + `DsCenteredTemplate` + `DsLoginForm`.
+Página genérica para mostrar una lista de items en formato catálogo.
 
-```dart
-Navigator.push(
-  context,
-  MaterialPageRoute(builder: (_) => const LoginPage()),
-);
-```
-
-- Muestra un AppBar con título "Login Page".
-- Formulario centrado con campos de email y contraseña.
-- Al presionar "Iniciar Sesión", muestra un `SnackBar` con el mensaje "Login presionado".
-
-### DashboardPage
-
-Página de dashboard con header, sección de tarjetas y resumen.
+| Propiedad   | Tipo                     | Requerido | Descripción                          |
+|-------------|--------------------------|-----------|--------------------------------------|
+| `title`     | `String`                 | Sí        | Título del catálogo                  |
+| `items`     | `List<CatalogItem>`      | Sí        | Lista de items a mostrar             |
+| `onItemTap` | `Function(CatalogItem)`  | Sí        | Callback al tocar un item            |
 
 ```dart
-Navigator.push(
-  context,
-  MaterialPageRoute(builder: (_) => const DashboardPage()),
-);
+DsCatalogPage(
+  title: 'Categorías',
+  items: categories.map((c) => CatalogItem(title: c.name)).toList(),
+  onItemTap: (item) {
+    // Navegar o ejecutar acción
+  },
+)
 ```
 
-- AppBar con título "Dashboard".
-- `DsAppHeader` con título "Bienvenido" y botón de logout.
-- `DsCardSection` con tarjetas de resumen (Usuarios Activos, Ventas del día, Notificaciones).
+**Modelo `CatalogItem`:**
+```dart
+class CatalogItem {
+  final String title;
+  CatalogItem({required this.title});
+}
+```
+
+Componentes usados:
+- `DsBaseTemplate` para la estructura
+- `DsAppHeader` para el encabezado
+- `DsCard` para cada item
+- `ListView.builder` con espaciado consistente
+
+### DsProductsPage
+
+Página genérica para mostrar una lista de productos con imagen, título y precio.
+
+| Propiedad       | Tipo                      | Requerido | Descripción                          |
+|-----------------|---------------------------|-----------|--------------------------------------|
+| `title`         | `String`                  | Sí        | Título de la página                  |
+| `products`      | `List<ProductItem>`       | Sí        | Lista de productos a mostrar         |
+| `onProductTap`  | `Function(ProductItem)`   | Sí        | Callback al tocar un producto        |
+
+```dart
+DsProductsPage(
+  title: 'Electrónica',
+  products: products.map((p) => ProductItem(
+    imageUrl: p.image,
+    title: p.name,
+    price: '\$${p.price}',
+  )).toList(),
+  onProductTap: (product) {
+    // Navegar al detalle
+  },
+)
+```
+
+**Modelo `ProductItem`:**
+```dart
+class ProductItem {
+  final String imageUrl;
+  final String title;
+  final String price;
+  
+  ProductItem({
+    required this.imageUrl,
+    required this.title,
+    required this.price,
+  });
+}
+```
+
+Componentes usados:
+- `DsBaseTemplate` para la estructura
+- `DsAppHeader` para el encabezado
+- `DsProductCard` para cada producto
+- `ListView.builder` con espaciado consistente
+
+### DsProductDetailPage
+
+Página genérica para mostrar el detalle completo de un producto.
+
+| Propiedad     | Tipo              | Requerido | Descripción                          |
+|---------------|-------------------|-----------|--------------------------------------|
+| `product`     | `ProductDetail`   | Sí        | Datos del producto                   |
+| `onAddToCart` | `VoidCallback?`   | No        | Callback al agregar al carrito       |
+
+```dart
+DsProductDetailPage(
+  product: ProductDetail(
+    imageUrl: product.image,
+    title: product.name,
+    price: '\$${product.price}',
+    category: product.category,
+    description: product.description,
+  ),
+  onAddToCart: () {
+    // Lógica para agregar al carrito
+  },
+)
+```
+
+**Modelo `ProductDetail`:**
+```dart
+class ProductDetail {
+  final String imageUrl;
+  final String title;
+  final String price;
+  final String category;
+  final String description;
+  
+  ProductDetail({
+    required this.imageUrl,
+    required this.title,
+    required this.price,
+    required this.category,
+    required this.description,
+  });
+}
+```
+
+Componentes usados:
+- `DsBaseTemplate` con scroll
+- `DsAppHeader` con título "Detalle"
+- `DsCard` para la imagen y precio
+- `DSText` con diferentes estilos tipográficos
+- `DsPrimaryButton` para agregar al carrito
 
 ---
 
@@ -613,11 +744,12 @@ example/
 │   ├── main.dart              # Punto de entrada de la app
 │   ├── showcase_home.dart     # Pantalla principal con lista de categorías
 │   └── pages/
-│       ├── atoms_page.dart     # Showcase de Átomos
-│       ├── molecules_page.dart # Showcase de Moléculas
-│       ├── organisms_page.dart # Showcase de Organismos
-│       ├── templates_page.dart # Showcase de Templates
-│       └── pages_page.dart     # Navegación a páginas completas
+│       ├── atoms_page.dart       # Showcase de Átomos
+│       ├── molecules_page.dart   # Showcase de Moléculas
+│       ├── organisms_page.dart   # Showcase de Organismos
+│       ├── templates_page.dart   # Showcase de Templates
+│       ├── pages_page.dart       # Navegación a páginas completas
+│       └── catalog_example.dart  # Ejemplos de páginas de catálogo
 └── pubspec.yaml               # Dependencia local a ds_atomic
 ```
 
@@ -654,10 +786,10 @@ La pantalla principal presenta un `ListView` con cinco categorías navegables:
 | Categoría      | Página              | Componentes mostrados                              |
 |----------------|---------------------|-----------------------------------------------------|
 | **Atoms**      | `AtomsPage`         | `DSText`, `DsPrimaryButton`, `DsInput`              |
-| **Molecules**  | `MoleculesPage`     | `DsLabeledInput`, `DsCard`                          |
-| **Organisms**  | `OrganismsPage`     | `DsLoginForm`                                       |
+| **Molecules**  | `MoleculesPage`     | `DsCard`, `DsIconButton`, `DsProductCard` (con ejemplos interactivos) |
+| **Organisms**  | `OrganismsPage`     | `DsAppHeader`, `DsCardSection` (con múltiples variaciones) |
 | **Templates**  | `TemplatesPage`     | `DsBaseTemplate` con contenido de ejemplo           |
-| **Pages**      | `PagesPage`         | Navegación a `LoginPage` y `DashboardPage`          |
+| **Pages**      | `PagesPage`         | Navegación a `DsCatalogPage`, `DsProductsPage`, `DsProductDetailPage` |
 
 Al tocar cada ítem se navega a la página correspondiente donde se visualizan los componentes en acción.
 

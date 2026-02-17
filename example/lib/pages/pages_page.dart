@@ -1,5 +1,6 @@
 import 'package:ds_atomic/ds_atomic.dart';
 import 'package:flutter/material.dart';
+import 'package:example/pages/catalog_example.dart';
 
 class PagesPage extends StatelessWidget {
   const PagesPage({super.key});
@@ -11,14 +12,42 @@ class PagesPage extends StatelessWidget {
       body: Column(
         children: [
           DsPrimaryButton(
-            label: 'Ir a login Page',
+            label: 'Ir a Catalog Page',
             onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CatalogPageExample()),
+              );
             },
           ),
           const SizedBox(height: DsSpacing.md),
           DsPrimaryButton(
-            label: 'Ir a Dashboard Page',
+            label: 'Ir a Products Page',
             onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) =>
+                      const ProductsPageExample(category: 'Electrónica'),
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: DsSpacing.md),
+          DsPrimaryButton(
+            label: 'Ir a Product Detail Page',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const ProductDetailPageExample(
+                    productTitle: 'Producto de Ejemplo',
+                    productPrice: '\$99.99',
+                    productImage: 'https://picsum.photos/300/300?random=5',
+                    category: 'Electrónica',
+                  ),
+                ),
+              );
             },
           ),
         ],

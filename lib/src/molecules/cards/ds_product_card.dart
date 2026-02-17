@@ -31,24 +31,42 @@ class DsProductCard extends StatelessWidget {
                 height: 120,
                 width: double.infinity,
                 fit: BoxFit.contain,
+                loadingBuilder: (context, child, progress) {
+                  if (progress == null) return child;
+                  return Container(
+                    height: 120,
+                    alignment: Alignment.center,
+                    child: CircularProgressIndicator(
+                      value: progress.expectedTotalBytes != null
+                          ? progress.cumulativeBytesLoaded /
+                                progress.expectedTotalBytes!
+                          : null,
+                    ),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    height: 120,
+                    color: DsColors.background,
+                    child: Icon(
+                      Icons.broken_image,
+                      color: DsColors.textSecondary,
+                      size: 48,
+                    ),
+                  );
+                },
               ),
             ),
 
             const SizedBox(height: DsSpacing.sm),
 
             // Título
-            DSText(
-              title,
-              style: DsTypography.body,
-            ),
+            DSText(title, style: DsTypography.body),
 
             const SizedBox(height: DsSpacing.sm),
 
             // Precio
-            DSText(
-              price,
-              style: DsTypography.caption,
-            ),
+            DSText(price, style: DsTypography.caption),
           ],
         ),
       ),

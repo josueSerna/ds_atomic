@@ -21,3 +21,8 @@ export 'src/organisms/sections/ds_card_section.dart';
 //Templates
 export 'src/templates/ds_base_template.dart';
 export 'src/templates/ds_centered_template.dart';
+
+//Pages
+export 'src/pages/ds_catalog_page.dart';
+export 'src/pages/ds_products_page.dart';
+export 'src/pages/ds_product_detail_page.dart';
